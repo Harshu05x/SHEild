@@ -10,9 +10,15 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "aadhaar-validator": "^1.1.0",
+    "axios": "^1.7.7",
+    "bcrypt": "^5.1.1",
     "cloudinary": "^2.4.0",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "mongoose": "^8.5.3"
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.5.3",
+    "otp-generation": "^1.0.5",
+    "twilio": "^5.3.1"
   }
 }

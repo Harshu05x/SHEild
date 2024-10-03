@@ -30,10 +30,22 @@ const userSchema=new mongoose.Schema({
         type:String,
         enum:["Female"]
     },
-    additionalDetails:{
+    address:{
+        type:String,
+    },
+    closestContacts:[
+        {
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"ClosestContact"
+        }
+    ],
+    menstrualCycle:{
         type:mongoose.Schema.Types.ObjectId,
-        required:true,
-        ref:"Profile",
+        ref:"menstrualCycle"
+    },
+    complaint:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"Complaint"
     }
 })
 

@@ -5,10 +5,6 @@ const NGOSchema=new mongoose.Schema({
         type:String,
         required:true
     },
-    OrganizationId:{
-        type:String,
-        required:true,
-    },
     Password:{
         type:String,
         required:true,
