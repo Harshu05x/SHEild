@@ -14,7 +14,7 @@ export const Btn=({path})=>
     }
     return(
         <div>
-            <button className="bg-blue-800 flex flex-row justify-center items-center gap-x-2 text-white hover:opacity-45 font-semibold leading-3 font-serif rounded-e-3xl rounded-s-3xl px-8 py-4" onClick={clickHandler}>
+            <button className="bg-blue-800 flex flex-row justify-center items-center gap-x-2 text-white hover:opacity-45 font-semibold leading-3 font-serif rounded-e-3xl rounded-s-3xl px-8 py-4 w-fit mx-auto" onClick={clickHandler}>
                 FIND OUT MORE  <IoIosArrowForward className="text-white font-semibold"/>
             </button>
         </div>

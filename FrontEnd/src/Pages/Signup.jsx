@@ -23,6 +23,13 @@ import React, { useState } from "react";
 import Women from "./../assets/Image/Women.jpg"; // Reuse background image
 import { Btn } from "../Components/Core/HomePage/btn"; // Reuse Btn component
 import { Link } from "react-router-dom";
+import { postRequest } from "../services/apiConnector";
+import { authEndpoints } from "../services/apis";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setToken } from "../slices/authSlice";
+import { setUser } from "../slices/profileSlice";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -35,13 +42,17 @@ const Signup = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const validateForm = () => {
     const newErrors = {};
+    console.log(formData);
     if (!formData.firstName) newErrors.firstName = "First name is required";
     if (!formData.lastName) newErrors.lastName = "Last name is required";
     if (!formData.password || formData.password.length < 8)
@@ -54,31 +65,33 @@ const Signup = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      return;
-    }
-    setErrors({});
-    // Handle signup logic (e.g., API call with JWT token)
-    console.log("Signup submitted:", formData);
-    // Example API call:
-    /*
+  const handleSubmit = async (e) => {
     try {
-      const response = await fetch("/api/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      // Store JWT token
-      console.log("Signup successful:", data);
+      e.preventDefault();
+      setIsLoading(true);
+      const validationErrors = validateForm();
+      console.log(validationErrors);
+      if (Object.keys(validationErrors).length > 0) {
+        setErrors(validationErrors);
+        return;
+      } 
+      setErrors({});
+      const response = await postRequest(authEndpoints.SIGNUP_API,formData);
+      console.log(response);
+      toast.success("Signup successful");
+      // take token and user save in local storage
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+
+      // dispatch
+      dispatch(setToken(response.data.token));
+      dispatch(setUser(response.data.user));
+      navigate("/");
     } catch (error) {
-      console.error("Signup failed:", error);
+      console.log(error);
+      let msg = error?.response?.data?.message || "Something went wrong";
+      toast.error(msg);
     }
-    */
   };
 
   return (

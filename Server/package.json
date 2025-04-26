@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
@@ -14,10 +16,13 @@
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.4.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.3",
+    "node-cron": "^3.0.3",
+    "nodemon": "^3.1.10",
     "otp-generation": "^1.0.5",
     "twilio": "^5.3.1"
   }

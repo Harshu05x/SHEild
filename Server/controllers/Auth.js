@@ -1,8 +1,8 @@
 const User=require("../models/User");
 const OTP=require("../models/OTP");
-const otpGeneration=require("otp-generation");
 const bcrypt=require("bcrypt");
 const jwt=require("jsonwebtoken");
+const Notification = require("../models/Notification");
 
 exports.sendOTP = async(req,res) => {
     try {
@@ -18,6 +18,9 @@ exports.sendOTP = async(req,res) => {
                 message: "User already registered."
             });
         };
+
+        // Import OTP generation module
+        const { default: otpGenerator } = await import("otp-generation");
 
         // Generate OTP
         var otp = otpGenerator.generate(6,{
@@ -64,28 +67,19 @@ exports.signUp=async(req,res)=>
             firstName,
             lastName,
             password,
-            confirmPassword,
-            aadharNumber,
+            aadhaar,
             contactNumber,
             gender,
-            address,
             otp
         }=req.body;
 
+        console.log(firstName,lastName,password,aadhaar,contactNumber,gender,otp);
         //validation
-        if(!firstName || !lastName || !password || !confirmPassword || !aadharNumber || !contactNumber || !gender ||!address)
+        if(!firstName || !lastName || !password  || !aadhaar || !contactNumber || !gender)
         {
             return res.status(403).json({
                 success:false,
                 message:"All fields are required",
-            })
-        }
-        //confirm password match
-        if(password !== confirmPassword)
-        {
-            return res.status(400).json({
-                success:false,
-                message:"Password and Confirmpassword do not match",
             })
         }
 
@@ -98,64 +92,50 @@ exports.signUp=async(req,res)=>
             })
         }
         //check user already exist or not
-        const existingUser=await User.findOne({aadharNumber});
+        const existingUser=await User.findOne({
+            $or: [
+                {aadhaarNumber: aadhaar},
+                {contactNumber: contactNumber}
+            ]
+        });
 
         if(existingUser)
         {
             return res.status(400).json({
                 success:false,
-                message:'User is already registered',
+                message:'User is already registered with this Aadhaar or Contact Number',
             });
         }
 
-        const recentOTP = await OTP.find({email}).sort({createdAt: -1}).limit(1);
-        console.log(recentOTP);
-        // validate OTP
-        if(recentOTP.length == 0){
-            // OTP not found
-            return res.status(400).json({
-                success: false,
-                message: "OTP not found."
-            });
-        }else if(otp !== recentOTP[0].otp){
-            // OTP not matching
-            return res.status(400).json({
-                success: false,
-                message: "Invalid OTP."
-            });
-
-        }
         const hashedPassword = await bcrypt.hash(password,10);
         
         // Create the user
 		let approved = "";
 		approved === "Instructor" ? (approved = false) : (approved = true);
 
-		// Create the Additional Profile For User
-        const profile = await Profile.create({
-            gender: null, 
-            dateOfBirth: null, 
-            about: null,
-            contactNumber: null, 
-        })
 
         // save entry in DB
         const user = await User.create({
             firstName,
             lastName,
-            email,
             contactNumber,
             password: hashedPassword,
-            accountType,
-            approved: approved,
-            additionalDetails: profile._id,
-            image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
+            gender: gender,
+            aadharNumber: aadhaar,
         });
+
+        // create a token and send in response
+        const token = jwt.sign({
+            id: user._id,
+        }, process.env.JWT_SECRET, { expiresIn: "24h" });
+        
+        console.log(token);
 
         // send response 
         return res.status(200).json({
             success: true,
             user,
+            token,
             message: "User registered successfully."
         });
 
@@ -164,8 +144,7 @@ exports.signUp=async(req,res)=>
         console.log(error.message);
         return res.status(500).json({
             success: false,
-            error: error.message,
-            message: "User cannot be registered."
+            message: error.message || "Something went wrong while registering the user"
         });
 
     }
@@ -176,10 +155,10 @@ exports.signUp=async(req,res)=>
 exports.login = async(req,res) => {
     try {
         // fetch data
-        const {email,password} = req.body;
+        const {mobile,password} = req.body;
 
         // validation
-        if(!email || !password){
+        if(!mobile || !password){
             return res.status(403).json({
                 success: false,
                 message: "All fields are required."
@@ -187,7 +166,9 @@ exports.login = async(req,res) => {
         }
 
         // check user exists 
-        const user = await User.findOne({email}).populate("additionalDetails").exec();
+        const user = await User.findOne({
+            contactNumber: mobile
+        });
         if(!user){
             return res.status(401).json({
                 success: false,
@@ -206,28 +187,23 @@ exports.login = async(req,res) => {
 
         // generate JWT token ans send in response
         const payload = {
-            email: user.email,
             id: user._id,
-            accountType: user.accountType
         }
-        const token = JWT.sign(payload,process.env.JWT_SECERT,{
+        const token = jwt.sign(payload,process.env.JWT_SECRET,{
             expiresIn: "24h"
         })
 
         user.token = token;
         user.password = undefined;
 
-        // send response with cookie
-        const options = {
-            expires: new Date (Date.now() + 3*24*60*60*1000),
-            httpOnly: true,
-        }
+        const notifications = await Notification.find({ user: user.id });
 
-        res.cookie("token",token,options).status(200).json({
+        res.status(200).json({
             success: true,
-            token,
             user,
-            message: "User logged in successfully"
+            token,
+            message: "User logged in successfully",
+            notifications: notifications
         })
 
     } catch (error) {
