@@ -7,6 +7,11 @@ import Home from "./Pages/Home";
 import About from "./Pages/About";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
+import GovernmentSchemes from "./Pages/Post";
+import SelfDefense from "./Pages/EducationInfocontain/SelfDefence";
+import LegalRights from "./Pages/EducationInfocontain/LegalRights";
+import HealthWellness from "./Pages/EducationInfocontain/HealthWellness";
+import FinancialIndependence from "./Pages/EducationInfocontain/FinancialIndependence";
 function App() {
   return (
     <div className="w-screen min-h-screen  flex flex-col font-inter">
@@ -17,6 +22,11 @@ function App() {
         <Route path="/about" element={<About/>}></Route>
         <Route path="/login" element={ <Login /> }/>
         <Route path="/signup" element={ <Signup /> }/>
+        <Route path='/post' element={<GovernmentSchemes/>}/>
+        <Route path="educational-information/self-defense" element={<SelfDefense />} />
+        <Route path="educational-information/legal-rights" element={<LegalRights />} />
+        <Route path="educational-information/health-wellness" element={<HealthWellness />} />
+        <Route path="educational-information/financial-independence" element={<FinancialIndependence />} />
       </Routes>
     </div>
   );
