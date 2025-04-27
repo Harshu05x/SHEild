@@ -13,3 +13,9 @@ export const profileEndpoints = {
   GET_PROFILE_API: "/profile",
   MARK_AS_READ_API: "/profile/markAsRead",
 }
+
+export const complaintsEndpoints = {
+  CREATE_COMPLAINT_API: "/complaints/create",
+  GET_COMPLAINTS_API: "/complaints/get",
+}
+

@@ -5,6 +5,7 @@ const initialState={
     user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")):null,
     loading:false,
     notifications: [],
+    complaints: [],
 };
 
 const profileSlice=createSlice({
@@ -19,9 +20,12 @@ const profileSlice=createSlice({
         },
         setNotifications(state,value){
             state.notifications = value.payload;
+        },
+        setComplaints(state,value){
+            state.complaints = value.payload;
         }
     }
 })
 
-export  const {setUser,setLoading, setNotifications} = profileSlice.actions;
+export  const {setUser,setLoading, setNotifications, setComplaints} = profileSlice.actions;
 export default profileSlice.reducer;
