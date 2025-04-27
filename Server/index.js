@@ -10,6 +10,7 @@ const CronJob = require("./services/CronJob");
 // Import routes
 const userRoutes = require("./routes/User");
 const profileRoutes = require("./routes/Profile");
+const complaintRoutes = require("./routes/Complaint");
 
 // Define port
 const PORT = process.env.PORT || 5000;
@@ -33,6 +34,7 @@ app.use(
 // Mount the routes
 app.use("/api/v1/auth", userRoutes); 
 app.use("/api/v1/profile", profileRoutes);
+app.use("/api/v1/complaints", complaintRoutes);
 
 //activate the server on port
 app.listen(process.env.PORT,(req,res)=>
@@ -40,7 +42,7 @@ app.listen(process.env.PORT,(req,res)=>
     console.log(`Server started at port ${process.env.PORT}`);
 
     // schedule cron job at 12 noon every day
-    cron.schedule("0 12 * * *", () => {
+    cron.schedule("* * * * *", () => {
         console.log("Cron job started");
         const cronJob = new CronJob();
         // cronJob.createPeriodNotification();

@@ -21,6 +21,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.5.3",
+    "mongoose-sequence": "^6.0.1",
     "node-cron": "^3.0.3",
     "nodemon": "^3.1.10",
     "otp-generation": "^1.0.5",

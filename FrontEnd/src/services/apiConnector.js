@@ -66,6 +66,7 @@ export const getRequestWithToken = async (url, params, headers) => {
     try {
         const token = localStorage.getItem("token");
         const response = await axiosInstance.get(url, { params: { ...params }, headers: { ...headers, Authorization: `Bearer ${token}` } });
+        console.log("GET Api -->", response)
         return response;
     } catch (error) {
         return handleError(error);
@@ -76,8 +77,10 @@ export const postRequestWithToken = async (url, data) => {
     try {
         const token = localStorage.getItem("token");
         const response = await axiosInstance.post(url, data, { headers: { Authorization: `Bearer ${token}` } });
+        console.log("POST Api -->", response)
         return response;
     } catch (error) {
+        console.log("POST Api -->", error)
         return handleError(error);
     }
 }
