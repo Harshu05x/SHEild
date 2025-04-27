@@ -28,7 +28,10 @@ const userSchema=new mongoose.Schema({
     },
     gender:{
         type:String,
-        enum:["Female"]
+        enum:["female"]
+    },
+    lastPeriodDate:{
+        type:Number,
     },
     address:{
         type:String,

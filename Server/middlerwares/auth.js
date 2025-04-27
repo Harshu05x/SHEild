@@ -5,9 +5,7 @@ require("dotenv").config();
 exports.auth = (req,res,next) => {
     try{
         // Extract the token
-        const token = req.body.token || 
-                      req.cookies.token ||
-                      req.header("Authorization")?.replace("Bearer ", "");
+        const token = req.headers.authorization.split(" ")[1];
         console.log("Auth middlerware: ",token);
 
         // if Token is not present then return response with error
@@ -20,7 +18,7 @@ exports.auth = (req,res,next) => {
 
         // Decode Token
         try{
-            const decode = jwt.verify(token,process.env.JWT_SECERT);
+            const decode = jwt.verify(token,process.env.JWT_SECRET);
             console.log(decode);
             req.user = decode;
             

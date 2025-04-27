@@ -18,17 +18,17 @@ const OTPSchema=new mongoose.Schema({
 
 //premiddleware add ->for api calling for adhar verification
 async function sendVerificationSMS(contactNumber,otp){
-    try(
-        const adharResponse=await axios.post('https://api-preproduction.signzy.app/api/v3/aadhaar/verify');
-        if(!adharResponse)
-        {
-            console.log("invalid data");
-        }
-    )
-    catch(error)
-    {
+    // try(
+    //     const adharResponse=await axios.post('https://api-preproduction.signzy.app/api/v3/aadhaar/verify');
+    //     if(!adharResponse)
+    //     {
+    //         console.log("invalid data");
+    //     }
+    // )
+    // catch(error)
+    // {
 
-    }
+    // }
 }
 
 module.exports=mongoose.model("OTP",OTPSchema);

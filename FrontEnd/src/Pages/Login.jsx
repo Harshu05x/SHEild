@@ -24,10 +24,17 @@ import React, { useState } from "react";
 import Women from "./../assets/Image/Women.jpg"; // Reuse background image
 import { Btn } from "../Components/Core/HomePage/btn"; // Reuse Btn component
 import { Link } from "react-router-dom";
+import { postRequest } from "../services/apiConnector";
+import { authEndpoints } from "../services/apis";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setToken} from "../slices/authSlice";
+import { setUser, setNotifications } from "../slices/profileSlice";
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    identifier: "", // Can be email or phone
+    mobile: "", 
     password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
@@ -36,10 +43,42 @@ const Login = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Handle login logic (e.g., API call with JWT token)
-    console.log("Login submitted:", formData);
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formData.mobile) newErrors.mobile = "Phone number is required";
+    else if (!/^\d{10}$/.test(formData.mobile)) newErrors.mobile = "Phone number must be 10 digits";
+    if (!formData.password) newErrors.password = "Password is required";
+    return newErrors;
+  };
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      const validationErrors = validateForm();
+      if(Object.keys(validationErrors).length > 0) {
+        toast.error(validationErrors.mobile || validationErrors.password);
+        return;
+      }
+
+      const response = await postRequest(authEndpoints.LOGIN_API,formData);
+      console.log(response);
+      toast.success("Login successful");
+      // take token and user save in local storage
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+      // dispatch
+      dispatch(setToken(response.data.token));
+      dispatch(setUser(response.data.user));
+      dispatch(setNotifications(response.data.notifications));
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      let msg = error?.response?.data?.message || "Something went wrong";
+      toast.error(msg);
+    }
   };
 
   return (
@@ -66,18 +105,18 @@ const Login = () => {
           {/* Identifier Field (Email or Phone) */}
           <div className="flex flex-col">
             <label
-              htmlFor="identifier"
+              htmlFor="mobile"
               className="text-blue-800 text-sm font-semibold tracking-wider mb-1"
             >
-              Email or Phone
+              Phone
             </label>
             <input
               type="text"
-              id="identifier"
-              name="identifier"
-              value={formData.identifier}
+              id="mobile"
+              name="mobile"
+              value={formData.mobile}
               onChange={handleChange}
-              placeholder="Enter email or phone"
+              placeholder="Enter phone number"
               className="border border-blue-800 rounded-md px-4 py-2 text-blue-900 focus:outline-none focus:ring-2 focus:ring-blue-900"
               required
             />
