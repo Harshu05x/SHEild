@@ -1,23 +1,18 @@
 const express=require("express");
 const mongoose=require("mongoose");
+
 const PoliceSchema=new mongoose.Schema({
-    registrationNo:{
+    name:{
         type:String,
         required:true
     },
-    Location:
-    {
+    mobile: {
         type:String,
-        required:true,
+        required:true
     },
-    contactNumber:{
+    password:{
         type:String,
-        require:true
-    },
-    Complaint:[{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"Complaint"
-    }]
+        required:true
+    }
 })
-
 module.exports=mongoose.model("Police",PoliceSchema);

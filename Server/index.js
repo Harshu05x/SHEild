@@ -11,6 +11,7 @@ const CronJob = require("./services/CronJob");
 const userRoutes = require("./routes/User");
 const profileRoutes = require("./routes/Profile");
 const complaintRoutes = require("./routes/Complaint");
+const policeRoutes = require("./routes/Police");
 
 // Define port
 const PORT = process.env.PORT || 5000;
@@ -35,6 +36,7 @@ app.use(
 app.use("/api/v1/auth", userRoutes); 
 app.use("/api/v1/profile", profileRoutes);
 app.use("/api/v1/complaints", complaintRoutes);
+app.use("/api/v1/police", policeRoutes);
 
 //activate the server on port
 app.listen(process.env.PORT,(req,res)=>

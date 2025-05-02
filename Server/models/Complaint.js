@@ -38,6 +38,9 @@ const complaintSchema=new mongoose.Schema({
         enum: ["low", "medium", "high"],
         default:"medium"
     },
+    response:{
+        type:String,
+    },
     status:{
         type:String,
         enum: ["pending", "resolved", "rejected"],
