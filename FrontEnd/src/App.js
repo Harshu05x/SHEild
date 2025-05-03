@@ -14,6 +14,7 @@ import HealthWellness from "./Pages/EducationInfocontain/HealthWellness";
 import FinancialIndependence from "./Pages/EducationInfocontain/FinancialIndependence";
 import Dashboard from "./Pages/Dashboard";
 import Complaints from "./Pages/Complaints";
+import Chatbot from "./Pages/Chatbot";
 function App() {
   return (
     <div className="w-screen min-h-screen  flex flex-col font-inter">
@@ -27,6 +28,7 @@ function App() {
         <Route path='/post' element={<GovernmentSchemes/>}/>
         <Route path='/dashboard' element={<Dashboard/>}/>
         <Route path='/complaints' element={<Complaints/>}/>
+        <Route path='/chatbot' element={<Chatbot/>}/>
         <Route path="educational-information/self-defense" element={<SelfDefense />} />
         <Route path="educational-information/legal-rights" element={<LegalRights />} />
         <Route path="educational-information/health-wellness" element={<HealthWellness />} />

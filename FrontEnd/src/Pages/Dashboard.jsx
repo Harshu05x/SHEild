@@ -292,11 +292,15 @@ const Dashboard = () => {
                                                 <p className="text-sm text-gray-700">How can I help you today?</p>
                                             </div>
                                         </div>
-                                        <button className="w-full bg-gradient-to-r from-purple-400 to-purple-500 hover:from-purple-500 hover:to-purple-600 rounded-lg py-2">
+                                        <button className="w-full bg-gradient-to-r from-purple-400 to-purple-500 hover:from-purple-500 hover:to-purple-600 rounded-lg py-2"
+                                            onClick={() => {
+                                                navigate("/chatbot");
+                                            }}
+                                        >
                                             Chat with AI Assistant
                                         </button>
                                         {/* comming soon text  */}
-                                        <p className="text-gray-500 text-lg text-center my-4">Coming soon ...</p>
+                                        {/* <p className="text-gray-500 text-lg text-center my-4">Coming soon ...</p> */}
                                     </CardContent>
                                 </Card>
 
